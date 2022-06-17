@@ -21,4 +21,5 @@ if [ $? -eq 1 ]; then
     echo "Error while trying to write repo path to home directory"
     exit 1;
 fi
+chmod +x ./update.sh
 cp ./update.sh /usr/local/bin/configsync-update

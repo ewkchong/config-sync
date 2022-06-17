@@ -14,28 +14,7 @@ createPatch() {
     rsync -r $HOST:/tmp/config/ config/sync
    }
 
-install() {
-    # if [ -e '/usr/local/bin/configsync' ]; then
-    #     echo "This tool is already installed."
-    #     exit 0;
-    # fi
-    read "This will add the script to your PATH. Would you like to continue? [yes/no]: " ans
-    if [ $ans = "no" ]; then
-        exit 0;
-    elif [ $ans = "yes" ]; then
-        :
-    else
-        echo "Install cancelled."
-        exit 0;
-    fi
-    cp $(basename $0) /usr/local/bin/configsync
-    if [ ! $? -eq 0 ]; then
-        echo "Unable to write to /usr/local/bin.\nYou may try running this command with root privileges, or by manually copying this script to your PATH."
-        exit 1;
-    fi
-}
-
-while getopts "p:" op; do
+while getopts "p?:e?:" op; do
     if [ ! -e ~/.configsync_info ]; then
         echo "config-sync has not yet been installed."
         exit 1;
@@ -44,7 +23,14 @@ while getopts "p:" op; do
         p)
             configsync-update
             pid=${OPTARG}
-            createPatch
+            echo $pid 
+            # createPatch
+            ;;
+        e)
+            configsync-update
+            eid=${OPTARG}
+            echo $eid
+            # createPatch
             ;;
         ?)
             usage
