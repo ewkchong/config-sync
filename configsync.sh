@@ -8,48 +8,17 @@ createPatch() {
         exit 1;
     fi
 
-    HOST="${pid}-master-7rqtwti--app@ssh.ca-1.platform.sh"
-    # see README.md for details about this command
-    ssh $HOST 'drush cex --diff -n --ansi' 2>&1 |
-        sed -re "s|/tmp/drush_tmp_[0-9]{10}_.{13}/|/config/sync/|g"\
-        -e "s,\x1B\[[0-9;]*[a-zA-Z],,g"\
-        -e '/^\[warning\]/,$d'\
-        -e 's|^rename\ from\ \/|rename\ from\ |g'\
-        -e 's|^rename\ to\ \/|rename\ to\ |g'\
-        -e '/diff/,$!d' > configsync.diff
-    trap 'rm configsync.diff' EXIT
-    if [ ! $? -eq 0 ]
-    then
-        echo "There was an error connecting to the master site, please check to make sure you have the following:\n\t The correct project ID\n\t Access to the project\n\t git\n\t zsh" >&2
-        rm configsync.diff
-        exit 1;
-    elif [ ! -s configsync.diff ]
-    then
-        echo "There are no configuration changes to sync."
-        rm configsync.diff
-        exit 0;
-    fi
-    REMOTE=$(git remote)
-    git diff-index --exit-code --quiet ${REMOTE}/master ./config/sync/
-    if [ ! $? -eq 0 ]
-    then
-        echo "Please check that all files in config/sync/ are clean, in sync with master, and try again." >&2
-        rm configsync.diff
-        exit 1;
-    fi
-    git apply --reject configsync.diff
-    if [ $? -eq 0 ]
-    then
-        echo "\nConfiguration successfully synced."
-    fi
-    rm configsync.diff
-}
+    HOST=$(platform ssh --pipe)
+    # HOST="${pid}-master-7rqtwti--app@ssh.ca-1.platform.sh"
+    ssh $HOST 'drush cex -n --destination=/tmp/config' 2>/dev/null 
+    rsync -r $HOST:/tmp/config/ config/sync
+   }
 
 install() {
-    if [ -e '/usr/local/bin/configsync' ]; then
-        echo "This tool is already installed."
-        exit 0;
-    fi
+    # if [ -e '/usr/local/bin/configsync' ]; then
+    #     echo "This tool is already installed."
+    #     exit 0;
+    # fi
     read "This will add the script to your PATH. Would you like to continue? [yes/no]: " ans
     if [ $ans = "no" ]; then
         exit 0;

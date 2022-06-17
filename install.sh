@@ -1,7 +1,7 @@
-if [ -e '/usr/local/bin/configsync' ]; then
-    echo "This tool is already installed."
-    exit 0;
-fi
+# if [ -e '/usr/local/bin/configsync' ]; then
+#     echo "This tool is already installed."
+#     exit 0;
+# fi
 read -p 'This will add the script to your PATH. Would you like to continue? [yes/no] ' ans
 if [ "$ans" = "no" ]; then
     exit 0;
