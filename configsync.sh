@@ -5,7 +5,7 @@ SUCCESS=" \x1B[1;97;42m[success]\x1B[22;0m "
 ERROR=" \x1B[1;97;41m[error]\x1B[22;0m "
 
 checkForUpdates() {
-    configsync-update $@
+    configsync-update "$@"
     if [ $? -eq 1 ]; then
         exit 0;
     fi
@@ -43,11 +43,9 @@ while getopts ":p:e:" op; do
     fi
     case $op in
         p)
-            checkForUpdates
             pid=${OPTARG}
             ;;
         e)
-            checkForUpdates
             eid=${OPTARG}
             ;;
         ?)
