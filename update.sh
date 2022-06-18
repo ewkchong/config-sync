@@ -6,12 +6,12 @@ if [ $? -eq 1 ]; then
     if [ "$ans" = "yes" ]; then
         git -C $REPO_PATH pull --force
         cp "${REPO_PATH}/configsync.sh" /usr/local/bin/configsync.sh
-        "config-sync has been updated."
-    elif [ "$ans" = "no" ]; then
-        exit 0;
+        SUCCESS=" \x1B[1;97;42m[success]\x1B[22;0m "
+        echo "${SUCCESS}configsync has been updated. Would you like to continue with your command?: configsync $1"
     else
         exit 1;
     fi
 else
     :
+    exit 1;
 fi
