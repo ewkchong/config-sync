@@ -1,4 +1,5 @@
 # config-sync
+config-sync is a command line tool that will pull the live configuration from an environment on platform.sh to your local repository, eliminating the need to go to the site, login, export the zipped tar and move the files manually.
 ## Installation
 First, clone the repository and `cd` into it. Then run the installer script using the following command.
 ```shell
