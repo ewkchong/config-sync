@@ -33,7 +33,7 @@ createPatch() {
     echo "Connecting to site using SSH..."
     ssh $HOST 'drush cex -n --destination=/tmp/config' 2>/dev/null 1>/dev/null
     echo "Config exported, now performing sync with local working tree..."
-    rsync -r $HOST:/tmp/config/ config/sync 1>/dev/null
+    rsync -r $HOST:/tmp/config/ config/sync --exclude '.gitkeep' --exclude '.htaccess' --exclude 'README.txt' --delete 1>/dev/null
     if [ $? -eq 1 ]; then
         echo "${ERROR}Unable to perform rsync."
     else
