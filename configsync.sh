@@ -36,6 +36,7 @@ createPatch() {
     fi
    }
 
+checkForUpdates
 while getopts ":p:e:" op; do
     if [ ! -e ~/.configsync_info ]; then
         echo "${ERROR}config-sync has not yet been installed."
@@ -54,5 +55,4 @@ while getopts ":p:e:" op; do
     esac
 done
 
-checkForUpdates
 createPatch
