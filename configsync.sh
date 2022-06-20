@@ -16,6 +16,11 @@ createPatch() {
         echo "${ERROR}No config/sync/ folder detected, please make sure you are using this command in a project repository." >&2
         exit 1;
     fi
+    if ! command -v platform &> /dev/null
+    then
+        echo "platform.sh CLI is not installed, please install it and try again"
+        exit 1;
+    fi
     if [ -z ${pid} ] && [ -z ${eid} ]; then
         HOST=$(platform ssh --pipe)
     elif [ -z ${pid} ] && [ ! -z ${eid} ]; then
