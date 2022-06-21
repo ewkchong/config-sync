@@ -30,6 +30,13 @@ createPatch() {
     else
         HOST=$(platform ssh --pipe -p $pid -e $eid)
     fi
+    if [ -z ${yes} ]; then
+        read -p 'This will overwrite any changes you currently have in the config/sync folder, would you like to continue? [yes/no] ' ans
+        if [ $ans != "yes" ]; then
+            echo "Configuration synchronization has been cancelled."
+            exit 0;
+        fi
+    fi
     echo "Connecting to site using SSH..."
     ssh $HOST 'drush cex -n --destination=/tmp/config' 2>/dev/null 1>/dev/null
     echo "Config exported, now performing sync with local working tree..."
@@ -42,7 +49,8 @@ createPatch() {
    }
 
 checkForUpdates
-while getopts ":p:e:" op; do
+trap "kill $$" SIGINT
+while getopts ":p:e:y" op; do
     if [ ! -e ~/.configsync_info ]; then
         echo "${ERROR}config-sync has not yet been installed."
         exit 1;
@@ -53,6 +61,9 @@ while getopts ":p:e:" op; do
             ;;
         e)
             eid=${OPTARG}
+            ;;
+        y)
+            yes=true
             ;;
         ?)
             usage 
