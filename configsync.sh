@@ -1,5 +1,5 @@
 #!/bin/sh
-usage() { echo "usage: $(basename $0) [-p <PROJECT-ID>] [-e <ENVIRONMENT-NAME>]" >&2; exit 1; }
+usage() { echo "usage: $(basename $0) [-p <PROJECT-ID>] [-e <ENVIRONMENT-NAME>] [-y]" >&2; exit 1; }
 
 SUCCESS=" \x1B[1;97;42m[success]\x1B[22;0m "
 ERROR=" \x1B[1;97;41m[error]\x1B[22;0m "
