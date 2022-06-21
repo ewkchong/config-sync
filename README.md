@@ -19,3 +19,19 @@ Alternatively, you may also specify either a project ID and/or an environment na
 ```shell
 configsync [-p <PROJECT-ID>] [-e <ENVIRONMENT-NAME>]
 ```
+
+## Repair
+In the case that anything breaks, you can always reset your configsync by first running the installation script,
+```shell
+sh uninstall.sh
+```
+making sure that your config-sync repository is up to date with master,
+```shell
+git fetch
+git reset --hard origin/master
+```
+and then re-running the install script.
+```shell
+sh install.sh
+```
+If that does not fix the issue, please contact me on GitHub.
