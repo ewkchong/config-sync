@@ -4,6 +4,7 @@ git -C $REPO_PATH diff --exit-code -s master..$(git remote)/master
 if [ $? -eq 1 ]; then
     read -p "There is an update available for configsync, would you like to update? [yes/no]: " ans
     if [ "$ans" = "yes" ]; then
+        git pull
         git -C $REPO_PATH reset --hard -q $(git remote)/master 
         cp "${REPO_PATH}/configsync.sh" /usr/local/bin/configsync
         if [ $? -eq 1 ]; then
