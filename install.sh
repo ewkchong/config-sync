@@ -3,9 +3,9 @@
 #     exit 0;
 # fi
 read -p 'This will add the script to your PATH. Would you like to continue? [yes/no] ' ans
-if [ "$ans" = "no" ]; then
+if [[ $ans =~ ^n.*$  ]]; then
     exit 0;
-elif [ "$ans" = "yes" ]; then
+elif [[ $ans =~ ^y.*$ ]]; then
     :
 else
     echo "Install cancelled."

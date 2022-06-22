@@ -32,7 +32,7 @@ createPatch() {
     fi
     if [ -z ${yes} ]; then
         read -p 'This will overwrite any changes you currently have in the config/sync folder, would you like to continue? [yes/no] ' ans
-        if [ $ans != "yes" ]; then
+        if [[ ! $ans =~ ^y.*$ ]]; then
             echo "Configuration synchronization has been cancelled."
             exit 0;
         fi
