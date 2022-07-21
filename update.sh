@@ -3,7 +3,7 @@
 # Git is used to check for new commits from the remote repository
 REPO_PATH=$(cat ~/.configsync_info)
 git -C $REPO_PATH fetch -q
-git -C $REPO_PATH diff --exit-code -s master..$(git remote)/master
+git -C $REPO_PATH diff --exit-code -s master..origin/master
 
 # if git diff returns an exit code of 1, that means that there are differences, so we will prompt for an update
 if [ $? -eq 1 ]; then
@@ -11,7 +11,7 @@ if [ $? -eq 1 ]; then
     # If the user inputs a string that begins with y, it will perform the update
     if [[ $ans =~ ^y.*$ ]]; then
         git pull
-        git -C $REPO_PATH reset --hard -q $(git remote)/master 
+        git -C $REPO_PATH reset --hard -q origin/master 
         cp "${REPO_PATH}/configsync.sh" /usr/local/bin/configsync
         if [ $? -eq 1 ]; then
             echo "Unable to update configsync. Please check your permissions or ensure the path to the repository is correct in ~/.configsync_info"

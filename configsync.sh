@@ -9,6 +9,8 @@ ERROR=" \x1B[1;97;41m[error]\x1B[22;0m "
 # Note: all original command arguments are passed to update script (via $@), but this currently has no effect
 checkForUpdates() {
     configsync-update "$@"
+    REPO_PATH=$(cat ~/.configsync_info)
+    cp "${REPO_PATH}/update.sh" /usr/local/bin/configsync-update
     if [ $? -eq 1 ]; then
         exit 0;
     fi
