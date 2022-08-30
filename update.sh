@@ -10,7 +10,7 @@ if [ $? -eq 1 ]; then
     read -p "There is an update available for configsync, would you like to update? [yes/no]: " ans
     # If the user inputs a string that begins with y, it will perform the update
     if [[ $ans =~ ^y.*$ ]]; then
-        git pull
+        git -C $REPO_PATH pull
         git -C $REPO_PATH reset --hard -q origin/master 
         cp "${REPO_PATH}/configsync.sh" /usr/local/bin/configsync
         if [ $? -eq 1 ]; then
