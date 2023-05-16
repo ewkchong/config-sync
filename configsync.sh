@@ -5,6 +5,16 @@ usage() { echo "usage: $(basename $0) [-p <PROJECT-ID>] [-e <ENVIRONMENT-NAME>] 
 SUCCESS=" \x1B[1;97;42m[success]\x1B[22;0m "
 ERROR=" \x1B[1;97;41m[error]\x1B[22;0m "
 
+# Log creation
+REPO_PATH=$(cat ~/.configsync_info)
+LOG_FILE="${REPO_PATH}/logs/configsync.log"
+if [ ! -f "$LOG_FILE" ]; then
+    touch "$LOG_FILE"
+fi
+write_log() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
+}
+
 # Run update script that was installed in install.sh, quit configsync if it fails
 # Note: all original command arguments are passed to update script (via $@), but this currently has no effect
 checkForUpdates() {
@@ -22,11 +32,13 @@ createPatch() {
     if [ ! -d './config/sync' ]
     then
         echo "${ERROR}No config/sync/ folder detected, please make sure you are using this command in a project repository." >&2
+        write_log "ERROR: no config/sync/ folder detected. Cancelling..."
         exit 1;
     fi
     if ! command -v platform &> /dev/null
     then
         echo "platform.sh CLI is not installed, please install it and try again"
+        write_log "ERROR: platform.sh CLI is not installed. Cancelling..."
         exit 1;
     fi
 
@@ -46,6 +58,7 @@ createPatch() {
         read -p 'This will overwrite any changes you currently have in the config/sync folder, would you like to continue? [yes/no] ' ans
         if [[ ! $ans =~ ^y.*$ ]]; then
             echo "Configuration synchronization has been cancelled."
+            write_log "ERROR: Configuration synchronization has been cancelled."
             exit 0;
         fi
     fi
@@ -61,12 +74,15 @@ createPatch() {
     rsync -r $HOST:/tmp/config/ config/sync --exclude '.gitkeep' --exclude '.htaccess' --exclude 'README.txt' --delete 1>/dev/null
     if [ $? -eq 1 ]; then
         echo "${ERROR}Unable to perform rsync."
+        write_log "ERROR: Unable to perform rsync."
     else
         echo "${SUCCESS}Config has been applied to working tree."
+        write_log "SUCCESS: Config has been applied to working tree."
     fi
    }
 
 # First, check for updates using checkForUpdates()
+write_log "ConfigSync was run in $(pwd)"
 checkForUpdates
 
 # Make sure that if the user presses CTRL-C, the configsync is killed

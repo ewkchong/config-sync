@@ -5,6 +5,16 @@ REPO_PATH=$(cat ~/.configsync_info)
 git -C $REPO_PATH fetch -q
 git -C $REPO_PATH diff --exit-code -s master..origin/master
 
+# Log creation
+REPO_PATH=$(cat ~/.configsync_info)
+LOG_FILE="${REPO_PATH}/logs/configsync.log"
+if [ ! -f "$LOG_FILE" ]; then
+    touch "$LOG_FILE"
+fi
+write_log() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
+}
+
 # if git diff returns an exit code of 1, that means that there are differences, so we will prompt for an update
 if [ $? -eq 1 ]; then
     read -p "There is an update available for configsync, would you like to update? [yes/no]: " ans
@@ -14,11 +24,13 @@ if [ $? -eq 1 ]; then
         git -C $REPO_PATH reset --hard -q origin/master 
         cp "${REPO_PATH}/configsync.sh" /usr/local/bin/configsync
         if [ $? -eq 1 ]; then
-            echo "Unable to update configsync. Please check your permissions or ensure the path to the repository is correct in ~/.configsync_info"
+            echo "Unable to update configsync. Please check your permissions or ensure the path to the repository is correct in '~/.configsync_info'"
+            write_log "Unable to update configsync. Please check your permissions or ensure the path to the repository is correct in '~/.configsync_info'"
             exit 1;
         fi
         SUCCESS=" \x1B[1;97;42m[success]\x1B[22;0m "
         echo "configsync has been updated. Running command..."
+        write_log "configsync has been updated. Running command..."
         exit 0;
     # If the user types anything that does not start with a y, then we will exit the update script and skip updating
     else
