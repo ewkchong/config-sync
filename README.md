@@ -20,12 +20,15 @@ configsync
 Alternatively, you may also specify either a project ID and/or an environment name using flags:
 ```shell
 configsync [-p <PROJECT-ID>] [-e <ENVIRONMENT-NAME>]
-
-configsync -p caldfviq54lyq -e master
 ```
 In addition, if you would like to skip the confirmation message for overwriting your current config/sync directory, pass in the -y flag:
 ```shell
 configsync -y
+```
+
+For example:
+```shell
+configsync -p abcdefgh12ijk -e master -y
 ```
 ## Repair
 In the case that anything breaks, you can always reset your configsync by first running the installation script,
@@ -41,4 +44,3 @@ and then re-running the install script.
 ```shell
 sh install.sh
 ```
-If that does not fix the issue, please contact me on GitHub.
